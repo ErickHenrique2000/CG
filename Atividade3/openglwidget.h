@@ -31,7 +31,14 @@ public:
     std::vector<QVector4D> colorsCasa;
     std::vector<GLuint> indicesCasa;
 
+    std::vector<QVector4D> verticesTelhado;
+    std::vector<QVector4D> colorsTelhado;
+    std::vector<GLuint> indicesTelhado;
     //std::vector<QVector4D> verticesTelhado;
+
+    std::vector<QVector4D> verticesSol;
+    std::vector<QVector4D> colorsSol;
+    std::vector<GLuint> indicesSol;
 
     GLuint shaderProgram{0};
 

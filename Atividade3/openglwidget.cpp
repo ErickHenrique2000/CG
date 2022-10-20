@@ -153,10 +153,10 @@ void OpenGLWidget::createVBOs(){
     colorsCasa.resize(4);
     indicesCasa.resize(6); // 2*3 dois triangulos * tres vertices
 
-    verticesCasa[0] = QVector4D(-0.5, -0.5, 0, 1);
-    verticesCasa[1] = QVector4D(0.5, -0.5, 0, 1);
-    verticesCasa[2] = QVector4D(0.5, 0.5, 0, 1);
-    verticesCasa[3] = QVector4D(-0.5, 0.5, 0, 1);
+    verticesCasa[0] = QVector4D(-0.5, -1, 0, 1);
+    verticesCasa[1] = QVector4D(0.5, -1, 0, 1);
+    verticesCasa[2] = QVector4D(0.5, 0, 0, 1);
+    verticesCasa[3] = QVector4D(-0.5, 0, 0, 1);
 
     colorsCasa[0] = QVector4D(0, 0, 1, 1);
     colorsCasa[1] = QVector4D(0, 0, 1, 1);
@@ -191,60 +191,78 @@ void OpenGLWidget::createVBOs(){
 
     //telhado
 
-    verticesCasa.resize(3);
-    colorsCasa.resize(3);
-    indicesCasa.resize(3); // 2*3 dois triangulos * tres vertices
+    verticesTelhado.resize(3);
+    colorsTelhado.resize(3);
+    indicesTelhado.resize(3); // 2*3 dois triangulos * tres vertices
 
-    verticesCasa[0] = QVector4D(-0.5, 0.5, 0, 1);
-    verticesCasa[1] = QVector4D(0, 1, 0, 1);
-    verticesCasa[2] = QVector4D(0.5, 0.5, 0, 1);
+    verticesTelhado[0] = QVector4D(-0.5, 0, 0, 1);
+    verticesTelhado[1] = QVector4D(0, 0.5, 0, 1);
+    verticesTelhado[2] = QVector4D(0.5, 0, 0, 1);
 
-    colorsCasa[0] = QVector4D(150.0/255, 75.0/255, 0, 1);
-    colorsCasa[1] = QVector4D(150.0/255, 75.0/255, 0, 1);
-    colorsCasa[2] = QVector4D(150.0/255, 75.0/255, 0, 1);
+    colorsTelhado[0] = QVector4D(150.0/255, 75.0/255, 0, 1);
+    colorsTelhado[1] = QVector4D(150.0/255, 75.0/255, 0, 1);
+    colorsTelhado[2] = QVector4D(150.0/255, 75.0/255, 0, 1);
 
-    indicesCasa[0] = 0;
-    indicesCasa[1] = 1;
-    indicesCasa[2] = 2;
+    indicesTelhado[0] = 0;
+    indicesTelhado[1] = 1;
+    indicesTelhado[2] = 2;
 
     glGenVertexArrays(1, &vaoTelhado);
     glBindVertexArray(vaoTelhado);
 
     glGenBuffers(1, &vboVertices);
     glBindBuffer(GL_ARRAY_BUFFER, vboVertices);
-    glBufferData(GL_ARRAY_BUFFER, verticesCasa.size()*sizeof(QVector4D), verticesCasa.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, verticesTelhado.size()*sizeof(QVector4D), verticesTelhado.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(0,4,GL_FLOAT,GL_FALSE,0,nullptr);
     glEnableVertexAttribArray(0);
 
     glGenBuffers (1, &vboColors);
     glBindBuffer (GL_ARRAY_BUFFER,vboColors);
-    glBufferData (GL_ARRAY_BUFFER,colorsCasa.size()*sizeof(QVector4D),colorsCasa.data(),GL_STATIC_DRAW);
+    glBufferData (GL_ARRAY_BUFFER,colorsTelhado.size()*sizeof(QVector4D),colorsTelhado.data(),GL_STATIC_DRAW);
     glVertexAttribPointer (1, 4, GL_FLOAT , GL_FALSE , 0, nullptr);
     glEnableVertexAttribArray (1);
 
     glGenBuffers (1, &eboIndices);
     glBindBuffer (GL_ELEMENT_ARRAY_BUFFER , eboIndices);
-    glBufferData (GL_ELEMENT_ARRAY_BUFFER , indicesCasa.size() * sizeof (GLuint), indicesCasa.data() , GL_STATIC_DRAW);
+    glBufferData (GL_ELEMENT_ARRAY_BUFFER , indicesTelhado.size() * sizeof (GLuint), indicesTelhado.data() , GL_STATIC_DRAW);
 
     // sol
 
-    verticesCasa.resize(qtdVerticesSol + 1);
-    colorsCasa.resize(qtdVerticesSol + 1);
-    indicesCasa.resize(qtdVerticesSol * 3);
+    /*
+    verticesCasa.resize(3);
+    colorsCasa.resize(3);
+    indicesCasa.resize(3);
+
+    verticesCasa[0] = QVector4D(0.5, 0.5, 0, 1);
+    verticesCasa[1] = QVector4D(1, 1, 0, 1);
+    verticesCasa[2] = QVector4D(1.5, 0.5, 0, 1);
+
+    colorsCasa[0] = QVector4D(1, 1, 0, 1);
+    colorsCasa[1] = QVector4D(1, 1, 0, 1);
+    colorsCasa[2] = QVector4D(1, 1, 0, 1);
+
+    indicesCasa[0] = 0;
+    indicesCasa[1] = 1;
+    indicesCasa[2] = 2;
+    */
+
+    verticesSol.resize(qtdVerticesSol + 2);
+    colorsSol.resize(qtdVerticesSol + 2);
+    indicesSol.resize(qtdVerticesSol * 3 + 3);
 
     int i = 0;
-    for(i = 0; i < qtdVerticesSol; i++){
-        verticesCasa[i] = QVector4D(std::sin(i*3.14/180) + 1.5, std::cos(i*3.14/180) + 1.5, 0, 1);
-        colorsCasa[i] = QVector4D(1, 1, 0, 1);
+    for(i = 0; i <= qtdVerticesSol; i++){
+        verticesSol[i] = QVector4D(std::sin(i*3.14/180)*0.3 + 0.5, std::cos(i*3.14/180)*0.5 + 0.5, 0, 1);
+        colorsSol[i] = QVector4D(1, 1, 0, 1);
     }
-    verticesCasa[qtdVerticesSol] = QVector4D(1.5, 1.5, 0, 1);
-    colorsCasa[qtdVerticesSol] = QVector4D(1, 1, 0, 1);
+    verticesSol[qtdVerticesSol+1] = QVector4D(0.5, 0.5, 0, 1);
+    colorsSol[qtdVerticesSol+1] = QVector4D(1, 1, 0, 1);
 
     int z = 0;
-    for(i = 0; i < qtdVerticesSol*3; i = i + 3){
-        indicesCasa[i] = z;
-        indicesCasa[i+1] = z+1;
-        indicesCasa[i+2] = qtdVerticesSol;
+    for(i = 0; i <= qtdVerticesSol*3; i = i + 3){
+        indicesSol[i] = z;
+        indicesSol[i+1] = z+1;
+        indicesSol[i+2] = qtdVerticesSol;
         z++;
     }
     //verticesCasa[0] = QVector4D(-0.5, 0.5, 0, 1);
@@ -259,24 +277,25 @@ void OpenGLWidget::createVBOs(){
     //indicesCasa[1] = 1;
     //indicesCasa[2] = 2;
 
+
     glGenVertexArrays(1, &vaoSol);
     glBindVertexArray(vaoSol);
 
     glGenBuffers(1, &vboVertices);
     glBindBuffer(GL_ARRAY_BUFFER, vboVertices);
-    glBufferData(GL_ARRAY_BUFFER, verticesCasa.size()*sizeof(QVector4D), verticesCasa.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, verticesSol.size()*sizeof(QVector4D), verticesSol.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(0,4,GL_FLOAT,GL_FALSE,0,nullptr);
     glEnableVertexAttribArray(0);
 
     glGenBuffers (1, &vboColors);
     glBindBuffer (GL_ARRAY_BUFFER,vboColors);
-    glBufferData (GL_ARRAY_BUFFER,colorsCasa.size()*sizeof(QVector4D),colorsCasa.data(),GL_STATIC_DRAW);
+    glBufferData (GL_ARRAY_BUFFER,colorsSol.size()*sizeof(QVector4D),colorsSol.data(),GL_STATIC_DRAW);
     glVertexAttribPointer (1, 4, GL_FLOAT , GL_FALSE , 0, nullptr);
     glEnableVertexAttribArray (1);
 
     glGenBuffers (1, &eboIndices);
     glBindBuffer (GL_ELEMENT_ARRAY_BUFFER , eboIndices);
-    glBufferData (GL_ELEMENT_ARRAY_BUFFER , indicesCasa.size() * sizeof (GLuint), indicesCasa.data() , GL_STATIC_DRAW);
+    glBufferData (GL_ELEMENT_ARRAY_BUFFER , indicesSol.size() * sizeof (GLuint), indicesSol.data() , GL_STATIC_DRAW);
 
 }
 
@@ -309,6 +328,9 @@ void OpenGLWidget::paintGL()
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(vaoTelhado);
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+
+    glBindVertexArray(vaoSol);
+    glDrawElements(GL_TRIANGLES, qtdVerticesSol*3 + 3, GL_UNSIGNED_INT, 0);
     //changeDiagonal();
 }
 
