@@ -24,6 +24,19 @@
      </rect>
     </property>
    </widget>
+   <widget class="QCheckBox" name="checkBoxDark">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>750</y>
+      <width>76</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Dark Mode</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -48,5 +61,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>checkBoxDark</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>toggleDarkMode(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>57</x>
+     <y>781</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>540</x>
+     <y>432</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

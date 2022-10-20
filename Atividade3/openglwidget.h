@@ -65,10 +65,13 @@ protected:
 private:
     QTimer timer;
     bool blinkFlag{false};
-    float red{0};
-    float blue{0};
-    float green{0};
+    float red{192.0/255.0};
+    float inc{0.002};
+    float blue{192.0/255.0};
+    float green{192.0/255.0};
     int qtdVerticesSol{360};
+    bool darkMode{false};
+    void atualizaCorSol();
 };
 
 #endif // OPENGLWIDGET_H

@@ -54,15 +54,16 @@ void OpenGLWidget::paintGL(){
 */
 
 void OpenGLWidget::toggleDarkMode(bool changeToDarkMode){
-    /*
     makeCurrent();
     if(changeToDarkMode){
         glClearColor(0,0,0,1);
+        darkMode = true;
     }else{
         glClearColor(1,1,1,1);
+        darkMode = false;
     }
+    createVBOs();
     update();
-    */
 }
 
 void OpenGLWidget::createShaders(){
@@ -189,43 +190,6 @@ void OpenGLWidget::createVBOs(){
     glBindBuffer (GL_ELEMENT_ARRAY_BUFFER , eboIndices);
     glBufferData (GL_ELEMENT_ARRAY_BUFFER , indicesCasa.size() * sizeof (GLuint), indicesCasa.data() , GL_STATIC_DRAW);
 
-    //telhado
-
-    verticesTelhado.resize(3);
-    colorsTelhado.resize(3);
-    indicesTelhado.resize(3); // 2*3 dois triangulos * tres vertices
-
-    verticesTelhado[0] = QVector4D(-0.5, 0, 0, 1);
-    verticesTelhado[1] = QVector4D(0, 0.5, 0, 1);
-    verticesTelhado[2] = QVector4D(0.5, 0, 0, 1);
-
-    colorsTelhado[0] = QVector4D(150.0/255, 75.0/255, 0, 1);
-    colorsTelhado[1] = QVector4D(150.0/255, 75.0/255, 0, 1);
-    colorsTelhado[2] = QVector4D(150.0/255, 75.0/255, 0, 1);
-
-    indicesTelhado[0] = 0;
-    indicesTelhado[1] = 1;
-    indicesTelhado[2] = 2;
-
-    glGenVertexArrays(1, &vaoTelhado);
-    glBindVertexArray(vaoTelhado);
-
-    glGenBuffers(1, &vboVertices);
-    glBindBuffer(GL_ARRAY_BUFFER, vboVertices);
-    glBufferData(GL_ARRAY_BUFFER, verticesTelhado.size()*sizeof(QVector4D), verticesTelhado.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0,4,GL_FLOAT,GL_FALSE,0,nullptr);
-    glEnableVertexAttribArray(0);
-
-    glGenBuffers (1, &vboColors);
-    glBindBuffer (GL_ARRAY_BUFFER,vboColors);
-    glBufferData (GL_ARRAY_BUFFER,colorsTelhado.size()*sizeof(QVector4D),colorsTelhado.data(),GL_STATIC_DRAW);
-    glVertexAttribPointer (1, 4, GL_FLOAT , GL_FALSE , 0, nullptr);
-    glEnableVertexAttribArray (1);
-
-    glGenBuffers (1, &eboIndices);
-    glBindBuffer (GL_ELEMENT_ARRAY_BUFFER , eboIndices);
-    glBufferData (GL_ELEMENT_ARRAY_BUFFER , indicesTelhado.size() * sizeof (GLuint), indicesTelhado.data() , GL_STATIC_DRAW);
-
     // sol
 
     /*
@@ -250,13 +214,30 @@ void OpenGLWidget::createVBOs(){
     colorsSol.resize(qtdVerticesSol + 2);
     indicesSol.resize(qtdVerticesSol * 3 + 3);
 
+    float incXSol{0.5};
+    float escalaSol{1.0};
+    if(darkMode){
+        incXSol=-0.5;
+        escalaSol = 0.7;
+    }
+
     int i = 0;
     for(i = 0; i <= qtdVerticesSol; i++){
-        verticesSol[i] = QVector4D(std::sin(i*3.14/180)*0.3 + 0.5, std::cos(i*3.14/180)*0.5 + 0.5, 0, 1);
-        colorsSol[i] = QVector4D(1, 1, 0, 1);
+        verticesSol[i] = QVector4D(std::sin(i*3.14/180)*0.3*escalaSol + incXSol, std::cos(i*3.14/180)*0.5*escalaSol + 0.5, 0, 1);
+        if(!darkMode){
+            colorsSol[i] = QVector4D(1, 1, 0, 1);
+        }else{
+            colorsSol[i] = QVector4D(192.0/255.0, 192.0/255.0, 192.0/255.0, 1);
+        }
+
     }
-    verticesSol[qtdVerticesSol+1] = QVector4D(0.5, 0.5, 0, 1);
-    colorsSol[qtdVerticesSol+1] = QVector4D(1, 1, 0, 1);
+    verticesSol[qtdVerticesSol+1] = QVector4D(incXSol, 0.5, 0, 1);
+
+    if(!darkMode){
+        colorsSol[qtdVerticesSol+1] = QVector4D(1, 1, 0, 1);
+    }else{
+        colorsSol[qtdVerticesSol+1] = QVector4D(192.0/255.0, 192.0/255.0, 192.0/255.0, 1);
+    }
 
     int z = 0;
     for(i = 0; i <= qtdVerticesSol*3; i = i + 3){
@@ -296,6 +277,45 @@ void OpenGLWidget::createVBOs(){
     glGenBuffers (1, &eboIndices);
     glBindBuffer (GL_ELEMENT_ARRAY_BUFFER , eboIndices);
     glBufferData (GL_ELEMENT_ARRAY_BUFFER , indicesSol.size() * sizeof (GLuint), indicesSol.data() , GL_STATIC_DRAW);
+
+    //telhado
+
+    verticesTelhado.resize(3);
+    colorsTelhado.resize(3);
+    indicesTelhado.resize(3); // 2*3 dois triangulos * tres vertices
+
+    verticesTelhado[0] = QVector4D(-0.5, 0, 0, 1);
+    verticesTelhado[1] = QVector4D(0, 0.5, 0, 1);
+    verticesTelhado[2] = QVector4D(0.5, 0, 0, 1);
+
+    colorsTelhado[0] = QVector4D(150.0/255, 75.0/255, 0, 1);
+    colorsTelhado[1] = QVector4D(150.0/255, 75.0/255, 0, 1);
+    colorsTelhado[2] = QVector4D(150.0/255, 75.0/255, 0, 1);
+
+    indicesTelhado[0] = 0;
+    indicesTelhado[1] = 1;
+    indicesTelhado[2] = 2;
+
+    glGenVertexArrays(1, &vaoTelhado);
+    glBindVertexArray(vaoTelhado);
+
+    glGenBuffers(1, &vboVertices);
+    glBindBuffer(GL_ARRAY_BUFFER, vboVertices);
+    glBufferData(GL_ARRAY_BUFFER, verticesTelhado.size()*sizeof(QVector4D), verticesTelhado.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0,4,GL_FLOAT,GL_FALSE,0,nullptr);
+    glEnableVertexAttribArray(0);
+
+    glGenBuffers (1, &vboColors);
+    glBindBuffer (GL_ARRAY_BUFFER,vboColors);
+    glBufferData (GL_ARRAY_BUFFER,colorsTelhado.size()*sizeof(QVector4D),colorsTelhado.data(),GL_STATIC_DRAW);
+    glVertexAttribPointer (1, 4, GL_FLOAT , GL_FALSE , 0, nullptr);
+    glEnableVertexAttribArray (1);
+
+    glGenBuffers (1, &eboIndices);
+    glBindBuffer (GL_ELEMENT_ARRAY_BUFFER , eboIndices);
+    glBufferData (GL_ELEMENT_ARRAY_BUFFER , indicesTelhado.size() * sizeof (GLuint), indicesTelhado.data() , GL_STATIC_DRAW);
+
+
 
 }
 
