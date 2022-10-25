@@ -12,46 +12,9 @@ OpenGLWidget::~OpenGLWidget()
     destroyShaders();
 }
 
-/*void OpenGLWidget::initializeGL(){
-    initializeOpenGLFunctions();
-    glClearColor(1,1,1,1);
-    QObject::connect(&timer, &QTimer::timeout,[&](){this->update();});
-    timer.start(1);
-}*/
-
 void OpenGLWidget::resizeGL(int w, int h){
 
 }
-
-/*
-void OpenGLWidget::paintGL(){
-
-    blinkFlag =! blinkFlag;
-
-    red = (red + 0.001);
-    if(red > 1){
-        red -=1;
-    }
-    green += 0.002;
-    if(green > 1){
-        green -=1;
-    }
-    blue += 0.003;
-    if(blue > 1){
-        blue -=1;
-    }
-
-    if(blinkFlag){
-        glClearColor(1, 1, 1, 1);
-    }else{
-        glClearColor(0, 0, 0, 1);
-    }
-
-    glClearColor(red, green, blue, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-}
-*/
 
 void OpenGLWidget::toggleDarkMode(bool changeToDarkMode){
     makeCurrent();
@@ -192,24 +155,6 @@ void OpenGLWidget::createVBOs(){
 
     // sol
 
-    /*
-    verticesCasa.resize(3);
-    colorsCasa.resize(3);
-    indicesCasa.resize(3);
-
-    verticesCasa[0] = QVector4D(0.5, 0.5, 0, 1);
-    verticesCasa[1] = QVector4D(1, 1, 0, 1);
-    verticesCasa[2] = QVector4D(1.5, 0.5, 0, 1);
-
-    colorsCasa[0] = QVector4D(1, 1, 0, 1);
-    colorsCasa[1] = QVector4D(1, 1, 0, 1);
-    colorsCasa[2] = QVector4D(1, 1, 0, 1);
-
-    indicesCasa[0] = 0;
-    indicesCasa[1] = 1;
-    indicesCasa[2] = 2;
-    */
-
     verticesSol.resize(qtdVerticesSol + 2);
     colorsSol.resize(qtdVerticesSol + 2);
     indicesSol.resize(qtdVerticesSol * 3 + 3);
@@ -246,18 +191,6 @@ void OpenGLWidget::createVBOs(){
         indicesSol[i+2] = qtdVerticesSol;
         z++;
     }
-    //verticesCasa[0] = QVector4D(-0.5, 0.5, 0, 1);
-    //verticesCasa[1] = QVector4D(0, 1, 0, 1);
-    //verticesCasa[2] = QVector4D(0.5, 0.5, 0, 1);
-
-    //colorsCasa[0] = QVector4D(150.0/255, 75.0/255, 0, 1);
-    //colorsCasa[1] = QVector4D(150.0/255, 75.0/255, 0, 1);
-    //colorsCasa[2] = QVector4D(150.0/255, 75.0/255, 0, 1);
-
-    //indicesCasa[0] = 0;
-    //indicesCasa[1] = 1;
-    //indicesCasa[2] = 2;
-
 
     glGenVertexArrays(1, &vaoSol);
     glBindVertexArray(vaoSol);
@@ -282,15 +215,22 @@ void OpenGLWidget::createVBOs(){
 
     verticesTelhado.resize(3);
     colorsTelhado.resize(3);
-    indicesTelhado.resize(3); // 2*3 dois triangulos * tres vertices
+    indicesTelhado.resize(3);
 
     verticesTelhado[0] = QVector4D(-0.5, 0, 0, 1);
     verticesTelhado[1] = QVector4D(0, 0.5, 0, 1);
     verticesTelhado[2] = QVector4D(0.5, 0, 0, 1);
 
-    colorsTelhado[0] = QVector4D(150.0/255, 75.0/255, 0, 1);
-    colorsTelhado[1] = QVector4D(150.0/255, 75.0/255, 0, 1);
-    colorsTelhado[2] = QVector4D(150.0/255, 75.0/255, 0, 1);
+    if(!darkMode){
+        colorsTelhado[0] = QVector4D(150.0/255, 75.0/255, 0, 1);
+        colorsTelhado[1] = QVector4D(150.0/255, 75.0/255, 0, 1);
+        colorsTelhado[2] = QVector4D(150.0/255, 75.0/255, 0, 1);
+    }else{
+        colorsTelhado[0] = QVector4D(118.0/255, 47.0/255, 32.0/255, 1);
+        colorsTelhado[1] = QVector4D(118.0/255, 47.0/255, 32.0/255, 1);
+        colorsTelhado[2] = QVector4D(118.0/255, 47.0/255, 32.0/255, 1);
+    }
+
 
     indicesTelhado[0] = 0;
     indicesTelhado[1] = 1;
@@ -344,13 +284,14 @@ void OpenGLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(shaderProgram);
+    glBindVertexArray(vaoSol);
+    glDrawElements(GL_TRIANGLES, qtdVerticesSol*3 + 3, GL_UNSIGNED_INT, 0);
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(vaoTelhado);
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 
-    glBindVertexArray(vaoSol);
-    glDrawElements(GL_TRIANGLES, qtdVerticesSol*3 + 3, GL_UNSIGNED_INT, 0);
+
     //changeDiagonal();
 }
 

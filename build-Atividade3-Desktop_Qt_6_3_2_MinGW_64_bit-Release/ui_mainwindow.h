@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
@@ -24,6 +25,7 @@ class Ui_MainWindow
 public:
     QWidget *centralwidget;
     OpenGLWidget *openGLWidget;
+    QCheckBox *checkBoxDark;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -37,6 +39,9 @@ public:
         openGLWidget = new OpenGLWidget(centralwidget);
         openGLWidget->setObjectName(QString::fromUtf8("openGLWidget"));
         openGLWidget->setGeometry(QRect(10, 70, 1061, 681));
+        checkBoxDark = new QCheckBox(centralwidget);
+        checkBoxDark->setObjectName(QString::fromUtf8("checkBoxDark"));
+        checkBoxDark->setGeometry(QRect(20, 750, 76, 20));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -47,6 +52,7 @@ public:
         MainWindow->setStatusBar(statusbar);
 
         retranslateUi(MainWindow);
+        QObject::connect(checkBoxDark, SIGNAL(toggled(bool)), openGLWidget, SLOT(toggleDarkMode(bool)));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -54,6 +60,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
+        checkBoxDark->setText(QCoreApplication::translate("MainWindow", "Dark Mode", nullptr));
     } // retranslateUi
 
 };
