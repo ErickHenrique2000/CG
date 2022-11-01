@@ -7,6 +7,7 @@
 #include <QString>
 #include <QFile>
 #include <QTextStream>
+#include <QMatrix4x4>
 
 class Model
 {
@@ -27,7 +28,7 @@ class Model
         void readOFFFile(const QString &);
 
         void computeBBox();
-        void rescaleModel();
+        void rescaleModelMatrix();
         QVector3D centroidBB, minBB, maxBB;
         float diagonalBB{0};//poderia ter uma classe BBox,separadamente
 
@@ -37,6 +38,8 @@ class Model
         std::vector<QString> fragmentShaderFile = {":/shaders/fzdepth.glsl"};
 
         std::vector<unsigned> shaderProgram;
+
+        QMatrix4x4 modelMatrix;
 
     signals:
         void statusBarMessage(QString);

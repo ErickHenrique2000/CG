@@ -184,11 +184,23 @@ void OpenGLWidget::destroyVBOs(std::shared_ptr<Model> m){
 }
 
 void OpenGLWidget::paintGL(){
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    /*glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     if (!model) return;
+
     auto shaderProgramID{model->shaderProgram[model->currentShader]};
     glUseProgram(shaderProgramID);
     glBindVertexArray(model->vao);
+    glDrawElements(GL_TRIANGLES, model->numFaces * 3, GL_UNSIGNED_INT, nullptr);*/
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (!model) return;
+    model->modelMatrix.setToIdentity();
+    model->rescaleModelMatrix();
+    glBindVertexArray(model->vao);
+    auto shaderProgramID{model->shaderProgram[model->currentShader]};
+    glUseProgram(shaderProgramID);
+    auto locModel{glGetUniformLocation(shaderProgramID, "model")};
+    glUniformMatrix4fv(locModel, 1, GL_FALSE, model->modelMatrix.data());
     glDrawElements(GL_TRIANGLES, model->numFaces * 3, GL_UNSIGNED_INT, nullptr);
 }
 
