@@ -9,6 +9,7 @@
 #include <vector>
 #include <QFile>
 #include <cmath>
+#include <array>
 
 #include <QApplication>
 #include <QKeyEvent>
@@ -40,6 +41,7 @@ public:
     void changeDiagonal();
 
     void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
 
     float playerPosYOffset{0};
     float playerPosY{0};
@@ -48,6 +50,7 @@ public:
     float targetPosY{0};
 
 signals:
+    void updateHitsLabel(QString);
 
 public slots:
     void animate();
@@ -61,6 +64,9 @@ private:
     QTimer timer;
     QElapsedTimer elapsedTimer;
     bool darkMode{false};
+    bool shotting{false};
+    std::array<float, 2> projectilePos;
+    int numHits{0};
 };
 
 #endif // OPENGLWIDGET_H

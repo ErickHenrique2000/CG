@@ -14,16 +14,33 @@
    <string>Hit the target</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="OpenGLWidget" name="openGLWidget">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>9</y>
-      <width>741</width>
-      <height>451</height>
-     </rect>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="HitsLabel">
+      <property name="font">
+       <font>
+        <pointsize>36</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>#Hits: 0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="OpenGLWidget" name="openGLWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -43,10 +60,27 @@
    <extends>QOpenGLWidget</extends>
    <header>openglwidget.h</header>
    <slots>
-    <slot>toggleDarkMode(bool)</slot>
+    <signal>updateHitsLabel(QString)</signal>
    </slots>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>openGLWidget</sender>
+   <signal>updateHitsLabel(QString)</signal>
+   <receiver>HitsLabel</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>399</x>
+     <y>335</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>62</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

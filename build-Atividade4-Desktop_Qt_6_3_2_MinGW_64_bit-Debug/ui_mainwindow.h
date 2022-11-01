@@ -11,6 +11,8 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
@@ -23,6 +25,8 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
+    QGridLayout *gridLayout;
+    QLabel *HitsLabel;
     OpenGLWidget *openGLWidget;
     QMenuBar *menubar;
     QStatusBar *statusbar;
@@ -34,9 +38,27 @@ public:
         MainWindow->resize(800, 600);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
+        gridLayout = new QGridLayout(centralwidget);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        HitsLabel = new QLabel(centralwidget);
+        HitsLabel->setObjectName(QString::fromUtf8("HitsLabel"));
+        QFont font;
+        font.setPointSize(36);
+        HitsLabel->setFont(font);
+
+        gridLayout->addWidget(HitsLabel, 0, 0, 1, 1);
+
         openGLWidget = new OpenGLWidget(centralwidget);
         openGLWidget->setObjectName(QString::fromUtf8("openGLWidget"));
-        openGLWidget->setGeometry(QRect(0, 9, 741, 451));
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(openGLWidget->sizePolicy().hasHeightForWidth());
+        openGLWidget->setSizePolicy(sizePolicy);
+        openGLWidget->setFocusPolicy(Qt::StrongFocus);
+
+        gridLayout->addWidget(openGLWidget, 1, 0, 1, 1);
+
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -47,6 +69,7 @@ public:
         MainWindow->setStatusBar(statusbar);
 
         retranslateUi(MainWindow);
+        QObject::connect(openGLWidget, SIGNAL(updateHitsLabel(QString)), HitsLabel, SLOT(setText(QString)));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -54,6 +77,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Hit the target", nullptr));
+        HitsLabel->setText(QCoreApplication::translate("MainWindow", "#Hits: 0", nullptr));
     } // retranslateUi
 
 };

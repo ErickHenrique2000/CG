@@ -184,14 +184,45 @@ void OpenGLWidget::paintGL()
     glUniform4f(locTranslation, 0.8f, targetPosY, 0, 0);
     glUniform1f(locScaling, 0.2f);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+
+    //projectile
+    if(shotting){
+        glUniform4f(locTranslation, projectilePos[0], projectilePos[1], 0, 0);
+        glUniform1f(locScaling, 0.05f);
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    }
 }
 
 void OpenGLWidget::keyPressEvent(QKeyEvent*event){
     switch(event->key()){
+        case Qt::Key_Up:
+            playerPosYOffset = 2.0f;
+            break;
+        case Qt::Key_Down:
+            playerPosYOffset = -2.0f;
+            break;
+        case Qt::Key_Space:
+            if(!shotting){
+                shotting = true;
+                projectilePos[0] = -0.7;
+                projectilePos[1] = playerPosY;
+            }
+            break;
         case Qt::Key_Escape:
-        QApplication::quit();
-        break;//desnecessario
+            QApplication::quit();
+            break;//desnecessario
     }
+}
+
+void OpenGLWidget::keyReleaseEvent(QKeyEvent *event){
+    switch(event->key()){
+        case Qt::Key_Up:
+            playerPosYOffset = 0.0f;
+            break;
+        case Qt::Key_Down:
+            playerPosYOffset = 0.0f;
+            break;
+        }
 }
 
 void OpenGLWidget::animate(){
@@ -211,6 +242,30 @@ void OpenGLWidget::animate(){
         }
     }
 
+    // player
+
+    playerPosY += playerPosYOffset*elTime;
+
+    if(playerPosY > 0.8f) playerPosY = 0.8f;
+    if(playerPosY < -0.8f) playerPosY = -0.8f;
+
+    // tiro
+    if(shotting){
+        projectilePos[0] += 3.0f*elTime;
+        if(projectilePos[0] > 0.8f){
+            if(std::fabs(projectilePos[1] - targetPosY) < 0.125f){
+                numHits++;
+                qDebug("Hit!!!");
+                emit updateHitsLabel(QString("#Hits: %1").arg(numHits));
+                shotting = false;
+            }
+            if(projectilePos[0] > 1.0f){
+                shotting = false;
+            }
+        }
+    }
+
     update();
 }
+
 
